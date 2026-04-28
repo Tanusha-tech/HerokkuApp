@@ -6,6 +6,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
 
 import java.time.Duration;
 import java.util.List;
@@ -19,6 +20,7 @@ public class DropdownTest {
         options.addArguments("--incognito");
         options.addArguments("--disable-notification");
         WebDriver driver = new ChromeDriver(options);
+        SoftAssert softAssert = new SoftAssert();
 
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
         driver.get("https://the-internet.herokuapp.com/dropdown");
@@ -28,16 +30,17 @@ public class DropdownTest {
 
         Assert.assertTrue(actualElements.size() >= 3, "Дропдаун пуст или не хватает значений");
 
-        Assert.assertEquals(select.getOptions().get(0).getText(), "Please select an option", "Некорректное дефолтное значение");
-        Assert.assertEquals(select.getOptions().get(1).getText(), "Option 1", "Некорректное значение для первого элемента");
-        Assert.assertEquals(select.getOptions().get(2).getText(), "Option 2", "Некорректное значение для второго элемента");
+        softAssert.assertEquals(select.getOptions().get(0).getText(), "Please select an option", "Некорректное дефолтное значение");
+        softAssert.assertEquals(select.getOptions().get(1).getText(), "Option 1", "Некорректное значение для первого элемента");
+        softAssert.assertEquals(select.getOptions().get(2).getText(), "Option 2", "Некорректное значение для второго элемента");
 
         select.selectByIndex(1);
-        Assert.assertEquals(select.getFirstSelectedOption().getText(), "Option 1", "Ошибка выбора первого элемента");
+        softAssert.assertEquals(select.getFirstSelectedOption().getText(), "Option 1", "Ошибка выбора первого элемента");
 
         select.selectByIndex(2);
-        Assert.assertEquals(select.getFirstSelectedOption().getText(), "Option 2", "Ошибка выбора второго элемента");
+        softAssert.assertEquals(select.getFirstSelectedOption().getText(), "Option 2", "Ошибка выбора второго элемента");
 
+        softAssert.assertAll();
         driver.quit();
     }
 }
